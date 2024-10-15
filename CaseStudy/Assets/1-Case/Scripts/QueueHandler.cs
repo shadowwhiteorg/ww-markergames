@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ww.Utilities.Singleton;
 
-public class QueueManager : Singleton<QueueManager>
+public class QueueHandler : Singleton<QueueHandler>
 {
 
     [SerializeField]
@@ -26,12 +26,6 @@ public class QueueManager : Singleton<QueueManager>
     void Start()
     {
         InitWaypoints();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void InitWaypoints()

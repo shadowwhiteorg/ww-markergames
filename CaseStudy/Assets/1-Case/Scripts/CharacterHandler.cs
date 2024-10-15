@@ -69,7 +69,7 @@ public class CharacterHandler : Singleton<CharacterHandler>
             if (character != null && !character.IsActivated)
             {
                 _charactersInQueue.Enqueue(character);
-                character.SetTargetDestination(QueueManager.Instance.GetNextWaypoint());
+                character.SetTargetDestination(QueueHandler.Instance.GetNextWaypoint());
                 character.ActivatePlayer();
                 break;
             }
@@ -89,17 +89,17 @@ public class CharacterHandler : Singleton<CharacterHandler>
                 return;
 
             }
-            character.SetTargetDestination(QueueManager.Instance.EndWaypoints[_currentCharacterIndex]);
+            character.SetTargetDestination(QueueHandler.Instance.EndWaypoints[_currentCharacterIndex]);
             ResetQueuePositions();
         }
     }
 
     private void ResetQueuePositions()
     {
-        QueueManager.Instance.ReleaseAllWaypoints();
+        QueueHandler.Instance.ReleaseAllWaypoints();
         foreach (Character character in _charactersInQueue)
         {
-            character.SetTargetDestination(QueueManager.Instance.GetNextWaypoint());
+            character.SetTargetDestination(QueueHandler.Instance.GetNextWaypoint());
         }
     }
 

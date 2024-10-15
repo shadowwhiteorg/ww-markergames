@@ -52,7 +52,6 @@ public class DiceController : Singleton<DiceController>
     [SerializeField]
     private List<int> _diceTargetValues = new List<int>();
     public List<int> DiceTargetValues => _diceTargetValues;
-    [SerializeField]
     private List<int> _selectedNumbers = new List<int>();
     public List<int> SelectedNumbers => _selectedNumbers;
     [SerializeField]
@@ -88,7 +87,7 @@ public class DiceController : Singleton<DiceController>
     private IEnumerator RollDiceWithDelay(int[] dices, float delay)
     {
         int m_total = 0;
-        _canRollDice = false;
+        UIManager.Instance.SetRollButtonState(false);
         for (int i = 0; i < dices.Length; i++)
         {
             m_total += dices[i];
@@ -99,7 +98,7 @@ public class DiceController : Singleton<DiceController>
         }
         // Check if target is reached
         CheckTargetFound(m_total);
-        _canRollDice = true;
+        UIManager.Instance.SetRollButtonState(true);
     }
 
     private void CheckTargetFound(int subTotal)

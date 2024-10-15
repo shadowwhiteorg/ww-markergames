@@ -58,7 +58,7 @@ public class Character : MonoBehaviour
 
     private IEnumerator StartCharacterInteraction()
     {
-        Image tableClock = QueueManager.Instance.TableTransform.GetChild(1).GetChild(0).GetComponent<Image>();
+        Image tableClock = QueueHandler.Instance.TableTransform.GetChild(1).GetChild(0).GetComponent<Image>();
         float m_timer = 0.0f;
         yield return new WaitUntil(() => HasReachedTarget);
         tableClock.fillAmount = 1;

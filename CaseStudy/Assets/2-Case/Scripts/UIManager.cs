@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using ww.Utilities.Singleton;
 public class UIManager : Singleton<UIManager>
 {
+
     #region Number Selection Fields
     [SerializeField]
     GameObject _numberSelectionPanel;
@@ -41,9 +42,9 @@ public class UIManager : Singleton<UIManager>
 
     [SerializeField]
     Sprite[] _diceSides;
+    private List<TextMeshProUGUI> _selectedNumberTexts = new List<TextMeshProUGUI>();
     #endregion
 
-    private List<TextMeshProUGUI> _selectedNumberTexts = new List<TextMeshProUGUI>();
 
     // Start is called before the first frame update
     void Start()
@@ -64,13 +65,10 @@ public class UIManager : Singleton<UIManager>
             NumberHandler.Instance.AddToSelectedNumbers(m_numberToSet);
         }
 
-        _rollButton.onClick.AddListener(() =>
-        {
-            if (DiceController.Instance.CanRollDice)
-                DiceController.Instance.RollDices();
-        });
+        _rollButton.onClick.AddListener(() => DiceController.Instance.RollDices());
 
     }
+
 
     private void InitSelectedNumberGrid()
     {
@@ -95,9 +93,7 @@ public class UIManager : Singleton<UIManager>
                 break;
             }
             if (i == _selectedNumberTexts.Count - 2)
-            {
                 StartCoroutine(ActivateRollPanelWithDelay(1));
-            }
         }
     }
 
@@ -122,22 +118,18 @@ public class UIManager : Singleton<UIManager>
         _totalText.text = DiceController.Instance.SumTotal.ToString();
     }
 
-    public void UpdateTotalText(int total)
-    {
-        _totalText.text = total.ToString();
-    }
-
-    public void UpdateThrowCountText(int throwCount)
-    {
-        _throwCountText.text = throwCount.ToString();
-    }
-
+    public void UpdateTotalText(int total) => _totalText.text = total.ToString();
+    public void UpdateThrowCountText(int throwCount)=> _throwCountText.text = throwCount.ToString();
+    public void SetRollButtonState(bool state) => _rollButton.interactable = state;
+    public void ActivateSelectedNumber(int index) => _selectedNumbersParent.transform.GetChild(index).GetChild(1).gameObject.SetActive(true);
+    
     public void SetDiceTexts(int count, int value)
     {
         if (_dicesParent.transform.GetChild(count))
         {
             if (!_dicesParent.transform.GetChild(count).gameObject.activeInHierarchy)
                 _dicesParent.transform.GetChild(count).gameObject.SetActive(true);
+
             _dicesParent.transform.GetChild(count).GetComponentInChildren<TextMeshProUGUI>().text = value.ToString();
             StartCoroutine(RollDiceSides(count, value - 1));
         }
@@ -156,10 +148,6 @@ public class UIManager : Singleton<UIManager>
         _dicesParent.transform.GetChild(index).GetChild(1).GetComponent<Image>().sprite = _diceSides[targetFace];
     }
 
-    public void ActivateSelectedNumber(int index)
-    {
-        _selectedNumbersParent.transform.GetChild(index).GetChild(1).gameObject.SetActive(true);
-    }
 
     public void UpdateDiceTotalText(int value)
     {

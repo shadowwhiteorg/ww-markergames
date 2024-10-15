@@ -5,24 +5,13 @@ using UnityEngine;
 using ww.Utilities.Singleton;
 public class NumberHandler : Singleton<NumberHandler>
 {
-    private int _targetValue = 17;
-    [SerializeField] int _sumTarget = 200;
-    [SerializeField] int _numberOfSelectedNumbers = 3;
+    [SerializeField] int _sumTarget;
+    [SerializeField] int _numberOfSelectedNumbers;
     public int NumberOfSelectedNumbers => _numberOfSelectedNumbers;
-
-    [SerializeField]
-    private int[] _diceValues = new int[3];
-    [SerializeField]
-    private List<int> _numberList = new List<int>();
 
     private List<int> _selectedNumbers = new List<int>();
     public List<int> SelectedNumbers => _selectedNumbers;
-
-
-    public void AddToSelectedNumbers(int number)
-    {
-        _selectedNumbers.Add(number);
-    }
+    public void AddToSelectedNumbers(int number) => _selectedNumbers.Add(number);
 
     private int[] TargetPositionsInList()
     {
@@ -57,7 +46,7 @@ public class NumberHandler : Singleton<NumberHandler>
     public List<int> DiceTargetList(List<int> selectedNumbers)
     {
         List<int> m_diceTargetList = new List<int>();
-        int m_sum = 200;
+        int m_sum = _sumTarget;
         int m_count = selectedNumbers.Count;
         m_sum = _sumTarget - SumUpSelectedNumbers(selectedNumbers);
         m_diceTargetList = GenerateNumberList(m_sum, 17, 3, 18, selectedNumbers);

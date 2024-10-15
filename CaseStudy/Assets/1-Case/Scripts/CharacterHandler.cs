@@ -8,10 +8,6 @@ public class CharacterHandler : Singleton<CharacterHandler>
     private Character _characterPrefab;
 
     [SerializeField]
-    private Transform _tableTransform;
-    public Transform TableTransform => _tableTransform;
-
-    [SerializeField]
     private float _groupDistance = 30.0f;
     public float GroupDistance => _groupDistance;
 
@@ -50,11 +46,11 @@ public class CharacterHandler : Singleton<CharacterHandler>
 
     private void InitializeCharacters()
     {
-        Vector3 m_groupCenter = _tableTransform.position + _tableTransform.forward * _groupDistance;
+        Vector3 m_groupCenter = QueueHandler.Instance.TableTransform.position + QueueHandler.Instance.TableTransform.forward * _groupDistance;
         for (int i = 0; i < _groupSize; i++)
         {
             Vector3 m_spawnPosition = m_groupCenter + Random.insideUnitSphere * _spawnRadius;
-            m_spawnPosition.y = _tableTransform.position.y;
+            m_spawnPosition.y = QueueHandler.Instance.TableTransform.position.y;
             Character character = Instantiate(_characterPrefab, m_spawnPosition, Quaternion.identity);
             character.transform.parent = this.transform;
             _characters.Add(character);

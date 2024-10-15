@@ -47,9 +47,21 @@ public class QueueHandler : Singleton<QueueHandler>
 
         for (int i = 0; i < CharacterHandler.Instance.GroupSize; i++)
         {
-            Vector3 m_waypointPosition = m_waypointCenter + Random.insideUnitSphere * CharacterHandler.Instance.SpawnRadius;
-            m_waypointPosition.y = _tableTransform.position.y;
-            _endWaypoints.Add(m_waypointPosition);
+            Vector3 m_waypointPosition;
+            bool isUniquePosition = false;
+
+            while (!isUniquePosition)
+            {
+                m_waypointPosition = m_waypointCenter + Random.insideUnitSphere * CharacterHandler.Instance.SpawnRadius;
+                m_waypointPosition.y = _tableTransform.position.y;
+
+                // Check if the position is unique
+                if (!_endWaypoints.Contains(m_waypointPosition))
+                {
+                    isUniquePosition = true;
+                    _endWaypoints.Add(m_waypointPosition);
+                }
+            }
         }
     }
 

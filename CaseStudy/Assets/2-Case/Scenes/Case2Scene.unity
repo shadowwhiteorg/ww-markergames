@@ -766,12 +766,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: def462c9ac6f3944abe78b8d4c4cc960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetValue: 17
   _sumTarget: 200
   _numberOfSelectedNumbers: 3
-  _diceValues: 000000000000000000000000
-  _numberList: 
-  _selectedNumbers: 
 --- !u!114 &1795493176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -786,7 +782,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxThrowCount: 20
   _diceTargetValues: 
-  _selectedNumbers: 
   _currentTargetValue: 0
 --- !u!4 &1795493177
 Transform:

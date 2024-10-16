@@ -121,7 +121,10 @@ public class UIManager : Singleton<UIManager>
     public void UpdateTotalText(int total) => _totalText.text = total.ToString();
     public void UpdateThrowCountText(int throwCount)=> _throwCountText.text = throwCount.ToString();
     public void SetRollButtonState(bool state) => _rollButton.interactable = state;
-    public void ActivateSelectedNumber(int index) => _selectedNumbersParent.transform.GetChild(index).GetChild(1).gameObject.SetActive(true);
+    public void ActivateSelectedNumber(int index)
+    {
+        _selectedNumbersParent.transform.GetChild(index).GetChild(1).gameObject.SetActive(true);
+    } 
     
     public void SetDiceTexts(int count, int value)
     {

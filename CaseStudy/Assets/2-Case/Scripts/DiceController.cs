@@ -79,6 +79,11 @@ public class DiceController : Singleton<DiceController>
     }
     public void RollDices()
     {
+        if (_throwCount >= _maxThrowCount)
+        {
+            Debug.Log("Max throw count reached");
+            return;
+        }
         StartCoroutine(RollDiceWithDelay(NumberHandler.Instance.RollDice(_diceTargetValues[_throwCount]), 1.5f));
         _currentTargetValue = _diceTargetValues[_throwCount];
         ThrowCount++;
@@ -106,7 +111,11 @@ public class DiceController : Singleton<DiceController>
         for (int i = 0; i < _selectedNumbers.Count; i++)
         {
             if (_selectedNumbers[i] == subTotal)
+            {
                 UIManager.Instance.ActivateSelectedNumber(i);
+                _selectedNumbers[i] = 0;
+                break;
+            }
         }
     }
 

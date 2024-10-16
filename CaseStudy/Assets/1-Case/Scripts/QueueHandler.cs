@@ -78,13 +78,14 @@ public class QueueHandler : Singleton<QueueHandler>
         return waypoints;
     }
 
-    public Vector3 GetNextWaypoint()
+    public Vector3 GetNextWaypoint(bool fromStart)
     {
         foreach (var waypoint in _initialWaypointsDictionary)
         {
             if (waypoint.Value == 0)
             {
-                _initialWaypointsDictionary[waypoint.Key] = 1;
+                if(!fromStart)
+                    _initialWaypointsDictionary[waypoint.Key] = 1;
                 return waypoint.Key;
             }
         }
@@ -98,6 +99,11 @@ public class QueueHandler : Singleton<QueueHandler>
     public void ReleaseAllWaypoints()
     {
         _initialWaypointsDictionary = WaypointsDictionary();
+    }
+
+    public void OccupyWaypoint(Vector3 waypoint)
+    {
+        _initialWaypointsDictionary[waypoint] = 1;
     }
 
 }

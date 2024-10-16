@@ -20,8 +20,13 @@ public class CharacterHandler : Singleton<CharacterHandler>
     public float SpawnRadius => _spawnRadius;
 
     private Queue<Character> _charactersInQueue = new Queue<Character>();
+
     private List<Character> _characters = new List<Character>();
     private static int _currentCharacterIndex = 0;
+
+    [SerializeField]
+    private List<Character> _charactersOnTheWay = new List<Character>();
+    public List<Character> CharactersOnTheWay => _charactersOnTheWay;
 
 
 
@@ -37,10 +42,6 @@ public class CharacterHandler : Singleton<CharacterHandler>
         if (Input.GetKeyDown(KeyCode.Space))
         {
             SendNextCharaterToQueue();
-        }
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            SendFirstCharactertoBack();
         }
     }
 
@@ -64,12 +65,30 @@ public class CharacterHandler : Singleton<CharacterHandler>
         {
             if (character != null && !character.IsActivated)
             {
-                _charactersInQueue.Enqueue(character);
-                character.SetTargetDestination(QueueHandler.Instance.GetNextWaypoint());
+                //_charactersInQueue.Enqueue(character);
+                _charactersOnTheWay.Add(character);
+                character.SetTargetDestination(QueueHandler.Instance.GetNextWaypoint(true));
                 character.ActivatePlayer();
                 break;
             }
         }
+    }
+
+    private void ResetOnTheWayCharacterTargets()
+    {
+        foreach (Character character in _charactersOnTheWay)
+        {
+            character.SetTargetDestination(QueueHandler.Instance.GetNextWaypoint(true));
+        }
+    }
+
+    public void CharacterReachedQueue(Character character)
+    {
+        _charactersOnTheWay.Remove(character);
+        _charactersInQueue.Enqueue(character);
+        QueueHandler.Instance.OccupyWaypoint(character.TargetWaypoint);
+        ResetOnTheWayCharacterTargets();
+
     }
 
     public void SendFirstCharactertoBack()
@@ -95,7 +114,8 @@ public class CharacterHandler : Singleton<CharacterHandler>
         QueueHandler.Instance.ReleaseAllWaypoints();
         foreach (Character character in _charactersInQueue)
         {
-            character.SetTargetDestination(QueueHandler.Instance.GetNextWaypoint());
+            character.SetTargetDestination(QueueHandler.Instance.GetNextWaypoint(false));
+            ResetOnTheWayCharacterTargets();
         }
     }
 

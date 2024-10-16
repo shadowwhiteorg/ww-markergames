@@ -7,17 +7,22 @@ using UnityEngine.UI;
 
 public class Character : MonoBehaviour
 {
-    [SerializeField] 
-    private Vector3 _targetPosition;
+    [SerializeField]
+    private float _interactonDuration = 5.0f;
+
+    private Vector3 _targetWaypoint;
+    public Vector3 TargetWaypoint => _targetWaypoint;
     [SerializeField] 
     private Vector2 _speedMinMax = new Vector2(2f, 10f);
 
     private NavMeshAgent _navMeshAgent;
     private bool _isActivated = false;
     public bool IsActivated => _isActivated;
-    public bool HasReachedTarget => Vector3.Distance(this.transform.position, _targetPosition) < .1f;
-    private Vector3 _targetWaypoint;
-    public Vector3 TargetWaypoint => _targetWaypoint;
+    public bool HasReachedTarget => Vector3.Distance(this.transform.position, _targetWaypoint) < .25f;
+   // private Vector3 _targetWaypoint;
+    private bool _isOnTheWay = false;
+    public bool IsOnTheWay => CharacterHandler.Instance.CharactersOnTheWay.Contains(this);
+
 
 
     private void Awake()
@@ -39,11 +44,13 @@ public class Character : MonoBehaviour
     {
         if (!HasReachedTarget)
         {
-            _navMeshAgent.SetDestination(_targetPosition);
+            _navMeshAgent.SetDestination(_targetWaypoint);
             _navMeshAgent.isStopped = false;
         }
         else
         {
+            if (IsOnTheWay)
+                ReachedQueueTarget();
             transform.rotation = Quaternion.Euler(0, 180, 0);
             _navMeshAgent.isStopped = true;
         }
@@ -51,7 +58,7 @@ public class Character : MonoBehaviour
 
     public void SetTargetDestination(Vector3 target)
     {
-        _targetPosition = target;
+        _targetWaypoint = target;
         if (CharacterHandler.Instance.IsFirstCharacter(this))
             StartCoroutine(StartCharacterInteraction());
     }
@@ -62,10 +69,10 @@ public class Character : MonoBehaviour
         float m_timer = 0.0f;
         yield return new WaitUntil(() => HasReachedTarget);
         tableClock.fillAmount = 1;
-        while (m_timer < 5.0f)
+        while (m_timer < _interactonDuration)
         {
             m_timer += Time.deltaTime;
-            tableClock.fillAmount = 1 - m_timer / 5.0f;
+            tableClock.fillAmount = 1 - m_timer / _interactonDuration;
             yield return null;
         }
         CharacterHandler.Instance.SendFirstCharactertoBack();
@@ -74,5 +81,12 @@ public class Character : MonoBehaviour
     public void ActivatePlayer()
     {
         _isActivated = true;
+    }
+
+    private void ReachedQueueTarget()
+    {
+        CharacterHandler.Instance.CharacterReachedQueue(this);
+        if (CharacterHandler.Instance.IsFirstCharacter(this))
+            StartCoroutine(StartCharacterInteraction());
     }
 }
